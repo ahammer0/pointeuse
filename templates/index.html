@@ -5,17 +5,20 @@
   <title>Pointeuse</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"> 
 </head>
-<body>
+<body hx-ext="sse" sse-connect="/stream">
   <h1>Pointeuse</h1>
 
   <div id="pointeuse">
     <p>Pointeuse</p>
     <button
       hx-post="/toggle"
-      hx-swap="innerHTML"
-      hx-target="#state"
+      hx-swap="none"
     >Toggle</button>
-    <div id="state" hx-get="/getStatus" hx-trigger="every 2s">
+    <button
+      hx-delete="/dropDb"
+      hx-swap="none"
+    >Drop DB</button>
+    <div id="state" hx-get="/getStatus" hx-trigger="sse:newdata">
       {% if state %}
         <p>Actif</p>
         <p>depuis : {{currentPeriode.getStartTimeStr()}}</p>
@@ -31,7 +34,7 @@
     id="periodes"
     hx-get="/getPeriodes"
     hx-swap="innerHTML"
-    hx-trigger="click from:#pointeuse, every 2s"
+    hx-trigger="click from:#pointeuse, sse:newdata"
     hx-target="#periodes"
     >
       {% for periode in periodes %}
@@ -41,5 +44,6 @@
   </div>
 
  <script src="https://unpkg.com/htmx.org@2.0.4" integrity="sha384-HGfztofotfshcF7+8n44JQL2oJmowVChPTg48S+jvZoztPfvwD79OC/LTtG6dMp+" crossorigin="anonymous"></script> 
+ <script src="https://unpkg.com/htmx-ext-sse@2.2.2/sse.js"></script>
 </body>
 </html>

@@ -1,13 +1,12 @@
-def webserver(dbLock):
+def webserver(db):
     from flask import Flask
     from flask import render_template
-    from DbAccess import DbAccess
+    from flask import Response
 
     app = Flask(__name__)
 
     @app.route('/')
     def hello_world():
-        db = DbAccess(dbLock)
         state = db.isActivePeriode
         allPeriods = db.getAllPeriodes()
         currentPeriode = db.currentPeriode
@@ -16,7 +15,6 @@ def webserver(dbLock):
 
     @app.route('/getStatus', methods=['GET'])
     def getStatus():
-        db = DbAccess(dbLock)
         if db.isActivePeriode:
             return f"""<p>Actif depuis: {db.currentPeriode.getStartTimeStr()}</p>"""
         else:
@@ -24,23 +22,37 @@ def webserver(dbLock):
 
     @app.route('/toggle', methods=['POST'])
     def toggleWorking():
-        db = DbAccess(dbLock)
         db.toggleWorking()
-        getStatus()
+        return getStatus()
 
     @app.route('/getPeriodes', methods=['GET'])
     def getPeriodes():
-        db = DbAccess(dbLock)
         periodes = db.getAllPeriodes()
         output =""
         for periode in periodes:
             output+=f"<li>{periode.getStartTimeStr()} - {periode.getDuration()}</li>"
         return output
 
-    app.run(host='0.0.0.0', port=5000)
+    @app.route("/stream")
+    def events():
+        def SSE():
+            while True:
+                status = db.getChangedFlag()
+                if status:
+                    db.resetChangedFlag()
+                    yield "event: newdata\ndata: newdata\n\n"
+        return Response(SSE(), mimetype="text/event-stream")
+
+    @app.route("/dropDb",methods=['DELETE'])
+    def dropDb():
+        db.dropDb()
+        db._createDb()
+        return "ok"
+
+    app.run(host='0.0.0.0', port=5000, threaded=True)
 
 if __name__ == '__main__':
     print("test webserver")
-    import threading
-    lock = threading.Lock()
-    webserver(lock)
+    from DbAccess import DbAccess
+    db = DbAccess()
+    webserver(db)

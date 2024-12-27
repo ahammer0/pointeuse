@@ -9,10 +9,9 @@ import DbAccess
 
 if __name__ == '__main__':
     print("test DbAccess")
-    dbLock = threading.Lock()
+    db = DbAccess.DbAccess()
 
-    webthread = threading.Thread(target=webserver.webserver, args=(dbLock,))
+    webthread = threading.Thread(target=webserver.webserver, args=(db,))
     webthread.start()
 
-    db = DbAccess.DbAccess(dbLock)
     kbdhandle.kbdhandle(db)

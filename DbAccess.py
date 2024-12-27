@@ -5,13 +5,15 @@ import time
 import Periode
 
 class DbAccess():
-    def __init__(self,lock):
-        self.lock = lock
-        self.con = sqlite3.connect('pointeuse.db')
+    def __init__(self):
+        self.lock = threading.Lock()
+        self.con = sqlite3.connect('pointeuse.db',check_same_thread=False)
         self._createDb()
 
         self.currentPeriode = self._getOpenedPeriode()
         self.isActivePeriode = self.currentPeriode is not None
+
+        self.changedFlag = False
 
     def _createDb(self):
         with self.lock:
@@ -26,6 +28,9 @@ class DbAccess():
         with self.lock:
             cur = self.con.cursor()
             cur.execute("""DROP TABLE IF EXISTS periode;""")
+            self.changedFlag = True
+            self.currantPeriode = None
+            self.isActivePeriode = False
 
     def newPeriode(self):
         with self.lock:
@@ -39,6 +44,7 @@ class DbAccess():
                 cur.execute("SELECT * FROM periode WHERE id=?;",(cur.lastrowid,))
                 self.currentPeriode = Periode.Periode(cur.fetchone())
                 self.isActivePeriode = True
+                self.changedFlag = True
 
     def _getOpenedPeriode(self):
         with self.lock:
@@ -61,6 +67,7 @@ class DbAccess():
 
             self.currentPeriode = None
             self.isActivePeriode = False
+            self.changedFlag = True
 
     def toggleWorking(self):
         if self.isActivePeriode:
@@ -80,6 +87,7 @@ class DbAccess():
             cur = self.con.cursor()
             cur.execute("""DELETE FROM periode where id=?;""",(id,))
             self.con.commit()
+            self.changedFlag = True
 
     def getTotalDurationSince(self,timestamp):
         with self.lock:
@@ -87,12 +95,17 @@ class DbAccess():
             cur.execute("""SELECT SUM(timestamp_out - timestamp_in) FROM periode WHERE timestamp_in > ?;""", (timestamp,))
             return Periode.Duration(cur.fetchone()[0])
 
+    def resetChangedFlag(self):
+        with self.lock:
+            self.changedFlag = False
+    def getChangedFlag(self):
+        with self.lock:
+            return self.changedFlag
+
 
 if __name__=="__main__":
     print("test DbAccess")
-    import threading
-    lock = threading.Lock()
-    db = DbAccess(lock)
+    db = DbAccess()
     print(db.getAllPeriodes())
     print(db.isActivePeriode, db.currentPeriode)
 
