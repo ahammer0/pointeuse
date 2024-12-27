@@ -2,6 +2,7 @@ import threading
 import sqlite3
 import time
 
+import Periode
 
 class DbAccess():
     def __init__(self):
@@ -36,7 +37,7 @@ class DbAccess():
                 self.con.commit()
 
                 cur.execute("SELECT * FROM periode WHERE id=?;",(cur.lastrowid,))
-                self.currentPeriode = cur.fetchone()
+                self.currentPeriode = Periode.Periode(cur.fetchone())
                 self.isActivePeriode = True
 
     def _getOpenedPeriode(self):
@@ -46,7 +47,8 @@ class DbAccess():
             WHERE timestamp_out IS NULL 
             ORDER BY timestamp_in DESC 
             LIMIT 1;""")
-            return cur.fetchone()
+            item = cur.fetchone()
+            return Periode.Periode(item) if (item is not None)  else None
 
     def closeLastOpenedPeriode(self):
         with self.lock:
@@ -60,11 +62,18 @@ class DbAccess():
             self.currentPeriode = None
             self.isActivePeriode = False
 
+    def toggleWorking(self):
+        if self.isActivePeriode:
+            self.closeLastOpenedPeriode()
+        else:
+            self.newPeriode()
+
     def getAllPeriodes(self):
         with self.lock:
             cur = self.con.cursor()
             cur.execute("""SELECT * FROM periode;""")
-            return cur.fetchall()
+            items = cur.fetchall()
+            return [Periode.Periode(item) for item in items]
 
     def deletePeriode(self,id):
         with self.lock:
