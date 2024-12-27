@@ -1,5 +1,5 @@
+#!/usr/bin/python3
 import threading
-import keyboard
 
 #modules internes
 import webserver
