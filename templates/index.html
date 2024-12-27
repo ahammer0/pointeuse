@@ -12,13 +12,14 @@
     <p>Pointeuse</p>
     <button
       hx-post="/toggle"
-      hx-swap="none"
+      hx-swap="innerHTML"
+      hx-target="#state"
     >Toggle</button>
     <button
       hx-delete="/dropDb"
       hx-swap="none"
     >Drop DB</button>
-    <div id="state" hx-get="/getStatus" hx-trigger="sse:newdata, load, every 1s">
+    <div id="state" hx-get="/getStatus" hx-trigger="sse:newdata, load">
     </div>
   </div>
 

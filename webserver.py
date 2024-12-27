@@ -16,7 +16,7 @@ def webserver(db):
     @app.route('/getStatus', methods=['GET'])
     def getStatus():
         if db.isActivePeriode:
-            return f"""<p>Actif depuis: {db.currentPeriode.getStartTimeStr()}</p>"""+f"""<p>Duree: {db.currentPeriode.getDuration()}</p>"""
+            return f"""<p hx-get="/getStatus" hx-trigger="every 1s" hx-target="#state">Actif depuis: {db.currentPeriode.getStartTimeStr()}</p>"""+f"""<p>Duree: {db.currentPeriode.getDuration()}</p>"""
         else:
             return """<p>Inactif</p>"""
 
