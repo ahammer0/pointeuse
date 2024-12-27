@@ -3,22 +3,43 @@
 <head>
   <meta charset="UTF-8">
   <title>Pointeuse</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"> 
 </head>
 <body>
   <h1>Pointeuse</h1>
-  <p>Pointeuse</p>
-  {% if state %}
-    <p>Actif</p>
-    <p>depuis : {{currentPeriode.getStartTimeStr()}}</p>
-  {% else %}
-    <p>Inactif</p>
-  {% endif %}
-  <h2>Periodes</h2>
-  <ul>
-    {% for periode in periodes %}
-      <li>{{ periode.getStartTimeStr() }} - {{ periode.getDuration() }}</li>
-    {% endfor %}
-  </ul> 
-  
+
+  <div id="pointeuse">
+    <p>Pointeuse</p>
+    <button
+      hx-post="/toggle"
+      hx-swap="innerHTML"
+      hx-target="#state"
+    >Toggle</button>
+    <div id="state">
+      {% if state %}
+        <p>Actif</p>
+        <p>depuis : {{currentPeriode.getStartTimeStr()}}</p>
+      {% else %}
+        <p>Inactif</p>
+      {% endif %}
+    </div>
+  </div>
+
+  <div >
+    <h2>Periodes</h2>
+    <ul 
+    id="periodes"
+    hx-get="/getPeriodes"
+    hx-swap="innerHTML"
+    hx-trigger="click from:#pointeuse"
+    hx-target="#periodes"
+    >
+      {% for periode in periodes %}
+        <li>{{ periode.getStartTimeStr() }} - {{ periode.getDuration() }}</li>
+      {% endfor %}
+    </ul> 
+  </div>
+
+ <script src="https://unpkg.com/htmx.org@2.0.4" integrity="sha384-HGfztofotfshcF7+8n44JQL2oJmowVChPTg48S+jvZoztPfvwD79OC/LTtG6dMp+" crossorigin="anonymous"></script> 
 </body>
 </html>
