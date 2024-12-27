@@ -12,4 +12,6 @@ jobs:
     - shell: bash
       run: chmod +x resetService.sh
     - shell: bash
+      run: chmod +x hello.py
+    - shell: bash
       run: ./resetService.sh
