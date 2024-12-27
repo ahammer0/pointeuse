@@ -18,13 +18,7 @@
       hx-delete="/dropDb"
       hx-swap="none"
     >Drop DB</button>
-    <div id="state" hx-get="/getStatus" hx-trigger="sse:newdata">
-      {% if state %}
-        <p>Actif</p>
-        <p>depuis : {{currentPeriode.getStartTimeStr()}}</p>
-      {% else %}
-        <p>Inactif</p>
-      {% endif %}
+    <div id="state" hx-get="/getStatus" hx-trigger="sse:newdata, load, every 1s">
     </div>
   </div>
 
@@ -32,14 +26,11 @@
     <h2>Periodes</h2>
     <ul 
     id="periodes"
-    hx-get="/getPeriodes"
-    hx-swap="innerHTML"
-    hx-trigger="click from:#pointeuse, sse:newdata"
-    hx-target="#periodes"
+      hx-get="/getPeriodes"
+      hx-swap="innerHTML"
+      hx-trigger="click from:#pointeuse, sse:newdata, load"
+      hx-target="#periodes"
     >
-      {% for periode in periodes %}
-        <li>{{ periode.getStartTimeStr() }} - {{ periode.getDuration() }}</li>
-      {% endfor %}
     </ul> 
   </div>
 

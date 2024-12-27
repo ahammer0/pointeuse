@@ -1,4 +1,5 @@
 import datetime
+import time
 
 class Periode:
     def __init__(self, period):
@@ -21,6 +22,8 @@ class Duration:
 
     @classmethod
     def fromPeriod(cls, period):
+        if period.timestamp_out is None:
+            return cls(int(time.time()) - period.timestamp_in)
         return cls(period.timestamp_out - period.timestamp_in)
 
     def __str__(self):
