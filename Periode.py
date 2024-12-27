@@ -9,6 +9,9 @@ class Periode:
     def __str__(self):
         return f"Periode({self.id}, {self.timestamp_in}, {self.timestamp_out})"
 
+    def getStartTimeStr(self):
+        return datetime.datetime.fromtimestamp(self.timestamp_in).strftime('%Y-%m-%d %H:%M:%S')
+
     def getDuration(self):
         return Duration.fromPeriod(self)
 

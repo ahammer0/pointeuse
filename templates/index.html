@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Pointeuse</title>
+</head>
+<body>
+  <h1>Pointeuse</h1>
+  <p>Pointeuse</p>
+  {% if state %}
+    <p>Actif</p>
+    <p>depuis : {{currentPeriode.getStartTimeStr()}}</p>
+  {% else %}
+    <p>Inactif</p>
+  {% endif %}
+  <h2>Periodes</h2>
+  <ul>
+    {% for periode in periodes %}
+      <li>{{ periode.getStartTimeStr() }} - {{ periode.getDuration() }}</li>
+    {% endfor %}
+  </ul> 
+  
+</body>
+</html>

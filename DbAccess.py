@@ -71,7 +71,7 @@ class DbAccess():
     def getAllPeriodes(self):
         with self.lock:
             cur = self.con.cursor()
-            cur.execute("""SELECT * FROM periode;""")
+            cur.execute("""SELECT * FROM periode WHERE timestamp_out IS NOT NULL;""")
             items = cur.fetchall()
             return [Periode.Periode(item) for item in items]
 
@@ -90,7 +90,9 @@ class DbAccess():
 
 if __name__=="__main__":
     print("test DbAccess")
-    db = DbAccess()
+    import threading
+    lock = threading.Lock()
+    db = DbAccess(lock)
     print(db.getAllPeriodes())
     print(db.isActivePeriode, db.currentPeriode)
 

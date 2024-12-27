@@ -1,16 +1,19 @@
 def webserver(dbLock):
     from flask import Flask
-    import DbAccess
+    from flask import render_template
+    from DbAccess import DbAccess
 
     app = Flask(__name__)
 
     @app.route('/')
     def hello_world():
-        db = DbAccess.DbAccess(dbLock)
+        db = DbAccess(dbLock)
         state = db.isActivePeriode
         allPeriods = db.getAllPeriodes()
+        currentPeriode = db.currentPeriode
 
-        return f"<p>{state}</p>\n<p>{allPeriods}</p>"
+        return render_template('index.html', state=state, currentPeriode=currentPeriode,periodes=allPeriods)
+
 
     app.run()
 
