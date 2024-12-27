@@ -81,15 +81,49 @@ class DbAccess():
             cur.execute("""DELETE FROM periode where id=?;""",(id,))
             self.con.commit()
 
+    def getTotalDurationSince(self,timestamp):
+        with self.lock:
+            cur = self.con.cursor()
+            cur.execute("""SELECT SUM(timestamp_out - timestamp_in) FROM periode WHERE timestamp_in > ?;""", (timestamp,))
+            return Periode.Duration(cur.fetchone()[0])
+
 
 if __name__=="__main__":
+    print("test DbAccess")
     db = DbAccess()
     print(db.getAllPeriodes())
+    print(db.isActivePeriode, db.currentPeriode)
+
+    print("new periode")
     db.newPeriode()
     db.newPeriode()
     print(db.getAllPeriodes())
+    print(db.isActivePeriode, db.currentPeriode)
+
     time.sleep(1)
-    db.closeLastOpenedPeriode()
+
+    print("toggle working")
+    db.toggleWorking()
     print(db.getAllPeriodes())
+    print(db.isActivePeriode, db.currentPeriode)
+
+    time.sleep(1)
+
+    print("toggle working")
+    db.toggleWorking()
+    print(db.getAllPeriodes())
+    print(db.isActivePeriode, db.currentPeriode)
+
+    time.sleep(1)
+
+    print("toggle working")
+    db.toggleWorking()
+    print(db.getAllPeriodes())
+    print(db.isActivePeriode, db.currentPeriode)
+
+    print("durée totale")
+    print(sum([p.getDuration() for p in db.getAllPeriodes()]))
+
+
 
     db.dropDb()
