@@ -2,49 +2,85 @@ import threading
 import sqlite3
 import time
 
+
 class DbAccess():
     def __init__(self):
         self.lock = threading.Lock()
-        self.state=""
         self.con = sqlite3.connect('pointeuse.db')
-        self.createDb()
+        self._createDb()
 
-    def createDb(self):
-        cur = self.con.cursor()
-        cur.execute("""CREATE TABLE IF NOT EXISTS periode (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            timestamp_in NOT NULL,
-            timestamp_out NULL);
-        """)
+        self.currentPeriode = self._getOpenedPeriode()
+        self.isActivePeriode = self.currentPeriode is not None
+
+    def _createDb(self):
+        with self.lock:
+            cur = self.con.cursor()
+            cur.execute("""CREATE TABLE IF NOT EXISTS periode (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                timestamp_in NOT NULL,
+                timestamp_out NULL);
+            """)
+
+    def dropDb(self):
+        with self.lock:
+            cur = self.con.cursor()
+            cur.execute("""DROP TABLE IF EXISTS periode;""")
 
     def newPeriode(self):
-        tin = time.time()
-        cur = self.con.cursor()
-        cur.execute("""INSERT INTO periode 
-        (timestamp_in) VALUES (?);""", (tin,))
-
-        self.con.commit()
-
-    def getOpenPeriode(self):
-        cur = self.con.cursor()
-        cur.execute("""SELECT * FROM periode 
-        WHERE timestamp_out IS NULL 
-        ORDER BY timestamp_in DESC 
-        LIMIT 1;""")
-        return cur.fetchone()
-
-    def closePeriode(self):
-        cur = self.con.cursor()
-        cur.execute("""UPDATE periode SET timestamp_out = ? 
-        WHERE timestamp_out IS NULL 
-        ORDER BY timestamp_in DESC 
-        LIMIT 1;""", (time.time(),))
-        self.con.commit()
-
-    def get(self):
         with self.lock:
-            return self.state
+            if not self.isActivePeriode:
+                tin = int(time.time())
+                cur = self.con.cursor()
+                cur.execute("""INSERT INTO periode 
+                (timestamp_in) VALUES (?);""", (tin,))
+                self.con.commit()
 
-    def set(self, value):
+                cur.execute("SELECT * FROM periode WHERE id=?;",(cur.lastrowid,))
+                self.currentPeriode = cur.fetchone()
+                self.isActivePeriode = True
+
+    def _getOpenedPeriode(self):
         with self.lock:
-            self.state = value
+            cur = self.con.cursor()
+            cur.execute("""SELECT * FROM periode 
+            WHERE timestamp_out IS NULL 
+            ORDER BY timestamp_in DESC 
+            LIMIT 1;""")
+            return cur.fetchone()
+
+    def closeLastOpenedPeriode(self):
+        with self.lock:
+            cur = self.con.cursor()
+            cur.execute("""UPDATE periode SET timestamp_out = ? 
+            WHERE timestamp_out IS NULL 
+            ORDER BY timestamp_in DESC 
+            LIMIT 1;""", (int(time.time()),))
+            self.con.commit()
+
+            self.currentPeriode = None
+            self.isActivePeriode = False
+
+    def getAllPeriodes(self):
+        with self.lock:
+            cur = self.con.cursor()
+            cur.execute("""SELECT * FROM periode;""")
+            return cur.fetchall()
+
+    def deletePeriode(self,id):
+        with self.lock:
+            cur = self.con.cursor()
+            cur.execute("""DELETE FROM periode where id=?;""",(id,))
+            self.con.commit()
+
+
+if __name__=="__main__":
+    db = DbAccess()
+    print(db.getAllPeriodes())
+    db.newPeriode()
+    db.newPeriode()
+    print(db.getAllPeriodes())
+    time.sleep(1)
+    db.closeLastOpenedPeriode()
+    print(db.getAllPeriodes())
+
+    db.dropDb()
