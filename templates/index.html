@@ -15,7 +15,7 @@
       hx-swap="innerHTML"
       hx-target="#state"
     >Toggle</button>
-    <div id="state">
+    <div id="state" hx-get="/getStatus" hx-trigger="every 2s">
       {% if state %}
         <p>Actif</p>
         <p>depuis : {{currentPeriode.getStartTimeStr()}}</p>
@@ -31,7 +31,7 @@
     id="periodes"
     hx-get="/getPeriodes"
     hx-swap="innerHTML"
-    hx-trigger="click from:#pointeuse"
+    hx-trigger="click from:#pointeuse, every 2s"
     hx-target="#periodes"
     >
       {% for periode in periodes %}

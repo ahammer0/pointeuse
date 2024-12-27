@@ -14,14 +14,19 @@ def webserver(dbLock):
 
         return render_template('index.html', state=state, currentPeriode=currentPeriode,periodes=allPeriods)
 
-    @app.route('/toggle', methods=['POST'])
-    def toggleWorking():
+    @app.route('/getStatus', methods=['GET'])
+    def getStatus():
         db = DbAccess(dbLock)
-        db.toggleWorking()
         if db.isActivePeriode:
             return f"""<p>Actif depuis: {db.currentPeriode.getStartTimeStr()}</p>"""
         else:
             return """<p>Inactif</p>"""
+
+    @app.route('/toggle', methods=['POST'])
+    def toggleWorking():
+        db = DbAccess(dbLock)
+        db.toggleWorking()
+        getStatus()
 
     @app.route('/getPeriodes', methods=['GET'])
     def getPeriodes():
