@@ -26,7 +26,8 @@ class Duration:
     def __str__(self):
         heure = int(self.duration / 3600)
         minute = int((self.duration % 3600) / 60)
-        return f"{heure}h{minute}"
+        secondes = int((self.duration % 3600) % 60)
+        return f"{heure}h{minute}m{secondes}s"
 
     def __add__(self, other):
         if isinstance(other, Duration):
