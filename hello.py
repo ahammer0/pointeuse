@@ -8,11 +8,11 @@ import DbAccess
 
 
 if __name__ == '__main__':
-    db = DbAccess.DbAccess()
+    print("test DbAccess")
+    dbLock = threading.Lock()
 
-    # kbdthread = threading.Thread(target=kbdhandle, args=(db,))
-    webthread = threading.Thread(target=webserver.webserver, args=(db,))
+    webthread = threading.Thread(target=webserver.webserver, args=(dbLock,))
     webthread.start()
+
+    db = DbAccess.DbAccess(dbLock)
     kbdhandle.kbdhandle(db)
-
-

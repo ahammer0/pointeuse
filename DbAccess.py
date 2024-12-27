@@ -5,8 +5,8 @@ import time
 import Periode
 
 class DbAccess():
-    def __init__(self):
-        self.lock = threading.Lock()
+    def __init__(self,lock):
+        self.lock = lock
         self.con = sqlite3.connect('pointeuse.db')
         self._createDb()
 

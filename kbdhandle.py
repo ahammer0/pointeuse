@@ -1,11 +1,8 @@
 def kbdhandle(db):
     while True:
-        db.newPeriode()
-        per = db.getOpenPeriode()
-        print(per)
         print("waiting for key")
-        test = input("entre un caractere: ")
-
-
-        db.set(test)
-
+        test = input("entre un caractere:(q to quit,t to toggle period)")
+        match test:
+            case "t":
+                db.toggleWorking()
+        print("working state is:",db.isActivePeriode)
