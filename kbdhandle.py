@@ -26,6 +26,17 @@ def seconde():
         wiringpi.delay(500)
         interrupt = False
 
+def setLedOn():
+    if os.getenv("ENV") == "opi":
+        os.system("echo default-on > /sys/devices/platform/leds/leds/red:status/trigger")
+    else:
+        print("led is on")
+
+def setLedOff():
+    if os.getenv("ENV") == "opi":
+        os.system("echo none > /sys/devices/platform/leds/leds/red:status/trigger")
+    else:
+        print("led is on")
 
 
 def kbdhandle(db):
@@ -39,6 +50,11 @@ def kbdhandle(db):
             print("working state is:",db.isActivePeriode)
     if os.getenv("ENV") == "opi":
         while True:
+            if db.isActivePeriode:
+                setLedOn()
+            else:
+                setLedOff()
+
             if interrupt:
                 db.toggleWorking()
                 seconde()
