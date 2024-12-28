@@ -47,7 +47,9 @@ def getDayTotal():
 
     totalDuration = db.getTotalDurationSince(startOfDayTimestamp)
 
-    return render_template('dayTotal.html', totalTimestamp=totalDuration)
+    return render_template('dayTotal.html',
+        totalTimestamp=totalDuration,
+        isActive=db.isActivePeriode)
 
 
 @app.route("/stream")

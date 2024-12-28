@@ -1,1 +1,12 @@
-<p data-totaltimestamp="{{totalTimestamp.toTimestamp()}}">{{totalTimestamp}}</p>
+<p
+  data-totaltimestamp="{{totalTimestamp.toTimestamp()}}"
+  data-active="{{isActive}}"
+  x-data="{
+    timestamp:$el.dataset.totaltimestamp,
+    isActive: $el.dataset.active==='True'
+  }"
+  x-text="formatTimestamp(timestamp)"
+  x-init="if(isActive) setInterval(() => { timestamp++; }, 1000)"
+>
+  {{totalTimestamp}}
+</p>

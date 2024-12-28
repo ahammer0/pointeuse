@@ -2,11 +2,16 @@
 <p>Actif depuis: {{currentPeriode.getStartTimeStr()}}</p>
 <p>
   Duree:
-  <span data-timestamp="{{currentPeriode.timestamp_in}}">
+  <span
+    data-timestamp="{{currentPeriode.timestamp_in}}"
+    x-data="{
+      timestamp: new Date()/1000 - $el.dataset.timestamp
+    }"
+    x-text="formatTimestamp(timestamp)"
+    x-init="setInterval(() => { timestamp++; }, 1000)"
+  >
     {{currentPeriode.getDuration()}}
   </span>
-  <script type="text/javascript">
-  </script>
 </p>
 {% else %}
 <p>Inactif</p>
