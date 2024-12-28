@@ -1,0 +1,14 @@
+ul#periodes{
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+
+ul#periodes li{
+  display: list-item;
+}
+
+button{
+  margin: 5px;
+  padding: 5px;
+}

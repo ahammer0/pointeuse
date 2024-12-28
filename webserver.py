@@ -2,6 +2,7 @@ from flask import Flask
 from flask import render_template
 from flask import Response
 from DbAccess import DbAccess
+from datetime import datetime
 db = DbAccess()
 
 app = Flask(__name__)
@@ -27,11 +28,27 @@ def toggleWorking():
     db.toggleWorking()
     return getStatus()
 
+
 @app.route('/getPeriodes', methods=['GET'])
 def getPeriodes():
     db = app.config['db']
     periodes = db.getAllPeriodes()
     return render_template('periodes.html', periodes=periodes)
+
+
+@app.route('/getDayTotal', methods=['GET'])
+def getDayTotal():
+    db = app.config['db']
+
+    date = datetime.now()
+    date = date.replace(hour=0, minute=0, second=0)
+    startOfDayTimestamp = int(date.timestamp())
+
+
+    totalDuration = db.getTotalDurationSince(startOfDayTimestamp)
+
+    return render_template('dayTotal.html', totalTimestamp=totalDuration)
+
 
 @app.route("/stream")
 def events():

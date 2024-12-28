@@ -4,6 +4,7 @@
     <meta charset="UTF-8" />
     <title>Pointeuse</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="/static/css/main.css" />
   </head>
   <body hx-ext="sse" sse-connect="/stream">
     <h1>Pointeuse</h1>
@@ -15,6 +16,14 @@
       </button>
       <button hx-delete="/dropDb" hx-swap="none">Drop DB</button>
       <div id="state" hx-get="/getStatus" hx-trigger="sse:newdata, load"></div>
+    </div>
+    <div id="dayTotal">
+      <h2>Total Jour</h2>
+      <div
+        id="dayTotalValue"
+        hx-get="/getDayTotal"
+        hx-trigger="sse:newdata, load"
+      ></div>
     </div>
 
     <div>

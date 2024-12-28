@@ -32,6 +32,9 @@ class Duration:
         secondes = int((self.duration % 3600) % 60)
         return f"{heure}h{minute}m{secondes}s"
 
+    def toTimestamp(self):
+        return int(self.duration)
+
     def __add__(self, other):
         if isinstance(other, Duration):
             return Duration(self.duration + other.duration)
