@@ -15,9 +15,11 @@ statesection.addEventListener("htmx:afterSettle", () => {
   const element = document.querySelector("[data-timestamp]");
   if (element?.isConnected) {
     const interval = setInterval(displayTime, 1000);
-    statesection.addEventListener("htmx:beforeSwap", () => {
+    const clean = () => {
       clearInterval(interval);
-      element.removeEventListener("htmx:beforeSwap", () => {});
-    });
+      console.log("clear interval");
+      statesection.removeEventListener("htmx:beforeSwap", clean);
+    }
+    statesection.addEventListener("htmx:beforeSwap",clean );
   }
 });
