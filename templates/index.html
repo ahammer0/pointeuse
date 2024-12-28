@@ -1,41 +1,39 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="fr">
-<head>
-  <meta charset="UTF-8">
-  <title>Pointeuse</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0"> 
-</head>
-<body hx-ext="sse" sse-connect="/stream">
-  <h1>Pointeuse</h1>
+  <head>
+    <meta charset="UTF-8" />
+    <title>Pointeuse</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  </head>
+  <body hx-ext="sse" sse-connect="/stream">
+    <h1>Pointeuse</h1>
 
-  <div id="pointeuse">
-    <p>Pointeuse</p>
-    <button
-      hx-post="/toggle"
-      hx-swap="innerHTML"
-      hx-target="#state"
-    >Toggle</button>
-    <button
-      hx-delete="/dropDb"
-      hx-swap="none"
-    >Drop DB</button>
-    <div id="state" hx-get="/getStatus" hx-trigger="sse:newdata, load">
+    <div id="pointeuse">
+      <p>Pointeuse</p>
+      <button hx-post="/toggle" hx-swap="innerHTML" hx-target="#state">
+        Toggle
+      </button>
+      <button hx-delete="/dropDb" hx-swap="none">Drop DB</button>
+      <div id="state" hx-get="/getStatus" hx-trigger="sse:newdata, load"></div>
     </div>
-  </div>
 
-  <div >
-    <h2>Periodes</h2>
-    <ul 
-    id="periodes"
-      hx-get="/getPeriodes"
-      hx-swap="innerHTML"
-      hx-trigger="click from:#pointeuse, sse:newdata, load"
-      hx-target="#periodes"
-    >
-    </ul> 
-  </div>
+    <div>
+      <h2>Periodes</h2>
+      <ul
+        id="periodes"
+        hx-get="/getPeriodes"
+        hx-swap="innerHTML"
+        hx-trigger="click from:#pointeuse, sse:newdata, load"
+        hx-target="#periodes"
+      ></ul>
+    </div>
 
- <script src="https://unpkg.com/htmx.org@2.0.4" integrity="sha384-HGfztofotfshcF7+8n44JQL2oJmowVChPTg48S+jvZoztPfvwD79OC/LTtG6dMp+" crossorigin="anonymous"></script> 
- <script src="https://unpkg.com/htmx-ext-sse@2.2.2/sse.js"></script>
-</body>
+    <script
+      src="https://unpkg.com/htmx.org@2.0.4"
+      integrity="sha384-HGfztofotfshcF7+8n44JQL2oJmowVChPTg48S+jvZoztPfvwD79OC/LTtG6dMp+"
+      crossorigin="anonymous"
+    ></script>
+    <script src="https://unpkg.com/htmx-ext-sse@2.2.2/sse.js"></script>
+    <script type="text/javascript" src="/static/js/main.js"></script>
+  </body>
 </html>

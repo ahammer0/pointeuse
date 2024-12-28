@@ -1,0 +1,13 @@
+{% if currentPeriode %}
+<p>Actif depuis: {{currentPeriode.getStartTimeStr()}}</p>
+<p>
+  Duree:
+  <span data-timestamp="{{currentPeriode.timestamp_in}}">
+    {{currentPeriode.getDuration()}}
+  </span>
+  <script type="text/javascript">
+  </script>
+</p>
+{% else %}
+<p>Inactif</p>
+{% endif %}

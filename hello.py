@@ -8,7 +8,6 @@ import DbAccess
 
 
 if __name__ == '__main__':
-    print("test DbAccess")
     db = DbAccess.DbAccess()
 
     webthread = threading.Thread(target=webserver.webserver, args=(db,))
