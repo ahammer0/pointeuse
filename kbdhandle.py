@@ -1,6 +1,13 @@
 import os
 from dotenv import load_dotenv
 load_dotenv()
+
+global interrupt
+interrupt = False
+def callback():
+        global interrupt
+        interrupt = True
+
 if os.getenv("ENV") == "opi":
     import time;
     import wiringpi;
@@ -8,31 +15,24 @@ if os.getenv("ENV") == "opi":
     wiringpi.wiringPiSetup();
     wiringpi.pinMode(8,GPIO.INPUT);
     wiringpi.pullUpDnControl(8,GPIO.PUD_DOWN);
+    wiringpi.wiringPiISR(8, GPIO.INT_EDGE_FALLING, callback)
 if os.getenv("ENV") == "dev":
     import keyboard
-
-global interrupt
-interrupt = False
-
-
-def callback():
-        global interrupt
-        interrupt = True
 
 def seconde():
         global interrupt
         print("itterrupt state",interrupt)
         print("test")
-        wiringpi.delay(500)
+        wiringpi.delay(200)
         interrupt = False
 
-def setLedOn():
+def setRedLedOn():
     if os.getenv("ENV") == "opi":
         os.system("echo default-on > /sys/devices/platform/leds/leds/red:status/trigger")
     else:
         print("led is on")
 
-def setLedOff():
+def setRedLedOff():
     if os.getenv("ENV") == "opi":
         os.system("echo none > /sys/devices/platform/leds/leds/red:status/trigger")
     else:
@@ -55,9 +55,9 @@ def kbdhandle(db):
             if status != statusBuffer:
                 statusBuffer = status
                 if status:
-                    setLedOn()
+                    setRedLedOn()
                 else:
-                    setLedOff()
+                    setRedLedOff()
 
             if interrupt:
                 db.toggleWorking()
