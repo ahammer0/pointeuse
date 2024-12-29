@@ -21,8 +21,12 @@
     <h1>Pointeuse</h1>
 
     <div id="pointeuse" hx-ext="sse" sse-connect="/stream">
-      <p hx-get="/getStatus" hx-target="#state" hx-trigger="sse:newdata">Pointeuse</p>
-      <button id="toggle" hx-post="/toggle" hx-swap="innerHTML" hx-target="#state">
+      <p>Pointeuse</p>
+      <button
+        id="toggle"
+        hx-post="/toggle"
+        hx-target="#state"
+      >
         Toggle
       </button>
       <button hx-delete="/dropDb" hx-swap="none">Drop DB</button>
