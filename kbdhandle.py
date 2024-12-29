@@ -49,9 +49,9 @@ def kbdhandle(db):
                     db.toggleWorking()
             print("working state is:",db.isActivePeriode)
     if os.getenv("ENV") == "opi":
+        statusBuffer = None
         while True:
             status = db.isActivePeriode
-            statusBuffer = None
             if status != statusBuffer:
                 statusBuffer = status
                 if status:
