@@ -1,18 +1,29 @@
-{% if currentPeriode %}
-<p>Actif depuis: {{currentPeriode.getStartTimeStr()}}</p>
-<p>
-  Duree:
-  <span
-    data-timestamp="{{currentPeriode.timestamp_in}}"
-    x-data="{
+{% block status %}
+<div >
+  <div
+    id="state"
+    hx-sync="closest button#toggle:abort"
+  >
+    {% if currentPeriode %}
+    <p>Actif depuis: {{currentPeriode.getStartTimeStr()}}</p>
+    <p>
+      Duree:
+      <span
+        data-timestamp="{{currentPeriode.timestamp_in}}"
+        x-data="{
       timestamp: new Date()/1000 - $el.dataset.timestamp
     }"
-    x-text="formatTimestamp(timestamp)"
-    x-init="setInterval(() => { timestamp++; }, 1000)"
-  >
-    {{currentPeriode.getDuration()}}
-  </span>
-</p>
-{% else %}
-<p>Inactif</p>
-{% endif %}
+        x-text="formatTimestamp(timestamp)"
+        x-init="setInterval(() => { timestamp++; }, 1000)"
+      >
+        {{currentPeriode.getDuration()}}
+      </span>
+    </p>
+    {% else %}
+    <p>Inactif</p>
+    {% endif %}
+  </div>
+</div>
+
+{% endblock %} {% if isUpdate is defined %} {% include "dayTotal.html" %} {%
+include "periodes.html" %} {% endif %}

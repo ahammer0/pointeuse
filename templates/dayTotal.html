@@ -1,12 +1,16 @@
-<p
-  data-totaltimestamp="{{totalTimestamp.toTimestamp()}}"
-  data-active="{{isActive}}"
-  x-data="{
-    timestamp:$el.dataset.totaltimestamp,
-    isActive: $el.dataset.active==='True'
-  }"
-  x-text="formatTimestamp(timestamp)"
-  x-init="if(isActive) setInterval(() => { timestamp++; }, 1000)"
->
-  {{totalTimestamp}}
-</p>
+{% block dayTotal %}
+<div id="dayTotalValue" hx-swap-oob="true">
+  <p
+    data-totaltimestamp="{{totalTimestamp.toTimestamp()}}"
+    data-active="{{currentPeriode != None}}"
+    x-data="{
+        timestamp:$el.dataset.totaltimestamp,
+        isActive: $el.dataset.active==='True'
+      }"
+    x-text="formatTimestamp(timestamp)"
+    x-init="if(isActive) setInterval(() => { timestamp++; }, 1000)"
+  >
+    {{totalTimestamp}}
+  </p>
+</div>
+{% endblock %}

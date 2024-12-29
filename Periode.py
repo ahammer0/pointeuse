@@ -18,7 +18,10 @@ class Periode:
 
 class Duration:
     def __init__(self, duration): 
-        self.duration = duration
+        if duration is None:
+            self.duration = 0
+        else: 
+            self.duration = duration
 
     @classmethod
     def fromPeriod(cls, period):

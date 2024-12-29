@@ -1,3 +1,8 @@
-{% for periode in periodes %}
-<li>{{periode.getStartTimeStr()}} - {{periode.getDuration()}}</li>
-{% endfor %}
+{% block periodes %}
+<ul id="periodes"
+    hx-swap-oob="true">
+  {% for periode in periodes %}
+  <li>{{periode.getStartTimeStr()}} - {{periode.getDuration()}}</li>
+  {% endfor %}
+</ul>
+{% endblock %}

@@ -15,12 +15,25 @@ def hello_world():
     allPeriods = db.getAllPeriodes()
     currentPeriode = db.currentPeriode
 
-    return render_template('index.html', state=state, currentPeriode=currentPeriode,periodes=allPeriods)
+    date = datetime.now()
+    date = date.replace(hour=0, minute=0, second=0)
+    startOfDayTimestamp = int(date.timestamp())
+    totalDuration = db.getTotalDurationSince(startOfDayTimestamp)
+
+    return render_template('index.html', state=state, currentPeriode=currentPeriode,periodes=allPeriods, totalTimestamp=totalDuration)
 
 @app.route('/getStatus', methods=['GET'])
 def getStatus():
     db = app.config['db']
-    return render_template('status.html', currentPeriode=db.currentPeriode)
+    state = db.isActivePeriode
+    allPeriods = db.getAllPeriodes()
+    currentPeriode = db.currentPeriode
+
+    date = datetime.now()
+    date = date.replace(hour=0, minute=0, second=0)
+    startOfDayTimestamp = int(date.timestamp())
+    totalDuration = db.getTotalDurationSince(startOfDayTimestamp)
+    return render_template('status.html', isUpdate=True, state=state, currentPeriode=currentPeriode,periodes=allPeriods, totalTimestamp=totalDuration)
 
 @app.route('/toggle', methods=['POST'])
 def toggleWorking():
@@ -44,12 +57,11 @@ def getDayTotal():
     date = date.replace(hour=0, minute=0, second=0)
     startOfDayTimestamp = int(date.timestamp())
 
-
     totalDuration = db.getTotalDurationSince(startOfDayTimestamp)
 
     return render_template('dayTotal.html',
         totalTimestamp=totalDuration,
-        isActive=db.isActivePeriode)
+        currentPeriode=db.currentPeriode,)
 
 
 @app.route("/stream")
@@ -60,7 +72,9 @@ def events():
             status = db.getChangedFlag()
             if status:
                 db.resetChangedFlag()
-                yield "event: newdata\ndata: newdata\n\n"
+                
+                print("\nsse newdata sent")
+                yield "event: newdata\ndata: newdatadata\n\n"
     return Response(SSE(), mimetype="text/event-stream")
 
 @app.route("/dropDb",methods=['DELETE'])
