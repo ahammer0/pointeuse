@@ -50,10 +50,14 @@ def kbdhandle(db):
             print("working state is:",db.isActivePeriode)
     if os.getenv("ENV") == "opi":
         while True:
-            if db.isActivePeriode:
-                setLedOn()
-            else:
-                setLedOff()
+            status = db.isActivePeriode
+            statusBuffer = None
+            if status != statusBuffer:
+                statusBuffer = status
+                if status:
+                    setLedOn()
+                else:
+                    setLedOff()
 
             if interrupt:
                 db.toggleWorking()
