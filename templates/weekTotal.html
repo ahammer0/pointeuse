@@ -1,0 +1,16 @@
+{% block weekTotal %}
+<div id="dayTotalValue" hx-swap-oob="true">
+  <p
+    data-totaltimestamp="{{totalSinceMonday.toTimestamp()}}"
+    data-active="{{currentPeriode != None}}"
+    x-data="{
+        timestamp:$el.dataset.totaltimestamp,
+        isActive: $el.dataset.active==='True'
+      }"
+    x-text="formatTimestamp(timestamp)"
+    x-init="if(isActive) setInterval(() => { timestamp++; }, 1000)"
+  >
+    {{totalTimestamp}}
+  </p>
+</div>
+{% endblock %}

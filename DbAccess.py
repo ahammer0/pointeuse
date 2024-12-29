@@ -93,10 +93,14 @@ class DbAccess():
         with self.lock:
             cur = self.con.cursor()
             cur.execute("""SELECT SUM(timestamp_out - timestamp_in) FROM periode WHERE timestamp_in > ?;""", (timestamp,))
-            if self.isActivePeriode:
-                return Periode.Duration(cur.fetchone()[0] + self.currentPeriode.getDuration().toTimestamp())
-            else:
-                return Periode.Duration(cur.fetchone()[0])
+            data = cur.fetchone()
+
+        if data[0] is None:
+            return Periode.Duration(0)
+        if self.isActivePeriode:
+            return Periode.Duration(data[0] + self.currentPeriode.getDuration().toTimestamp())
+        else:
+            return Periode.Duration(data[0])    
 
     def resetChangedFlag(self):
         with self.lock:

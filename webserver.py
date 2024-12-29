@@ -3,10 +3,23 @@ from flask import render_template
 from flask import Response
 from DbAccess import DbAccess
 from datetime import datetime
+from datetime import timedelta
 db = DbAccess()
 
 app = Flask(__name__)
 app.config['db'] = db
+
+def getMondayMidnightTimestamp():
+    date = datetime.now()
+    while date.weekday() != 0:
+        date = date - timedelta(days=1)
+    date = date.replace(hour=0, minute=0, second=0)
+    return int(date.timestamp())    
+
+def getMidnightTimestamp():
+    date = datetime.now()
+    date = date.replace(hour=0, minute=0, second=0)
+    return int(date.timestamp())
 
 @app.route('/')
 def hello_world():
@@ -15,12 +28,15 @@ def hello_world():
     allPeriods = db.getAllPeriodes()
     currentPeriode = db.currentPeriode
 
-    date = datetime.now()
-    date = date.replace(hour=0, minute=0, second=0)
-    startOfDayTimestamp = int(date.timestamp())
-    totalDuration = db.getTotalDurationSince(startOfDayTimestamp)
+    totalDuration = db.getTotalDurationSince(getMidnightTimestamp())
+    totalSinceMonday = db.getTotalDurationSince(getMondayMidnightTimestamp())   
 
-    return render_template('index.html', state=state, currentPeriode=currentPeriode,periodes=allPeriods, totalTimestamp=totalDuration)
+    return render_template('index.html',
+        state=state,
+        currentPeriode=currentPeriode,
+        periodes=allPeriods,
+        totalTimestamp=totalDuration,
+        totalSinceMonday=totalSinceMonday)
 
 @app.route('/getStatus', methods=['GET'])
 def getStatus():
@@ -29,11 +45,16 @@ def getStatus():
     allPeriods = db.getAllPeriodes()
     currentPeriode = db.currentPeriode
 
-    date = datetime.now()
-    date = date.replace(hour=0, minute=0, second=0)
-    startOfDayTimestamp = int(date.timestamp())
-    totalDuration = db.getTotalDurationSince(startOfDayTimestamp)
-    return render_template('status.html', isUpdate=True, state=state, currentPeriode=currentPeriode,periodes=allPeriods, totalTimestamp=totalDuration)
+    totalDuration = db.getTotalDurationSince(getMidnightTimestamp())
+    totalSinceMonday = db.getTotalDurationSince(getMondayMidnightTimestamp())   
+
+    return render_template('status.html',
+            isUpdate=True,
+            jstate=state,
+            currentPeriode=currentPeriode,
+            periodes=allPeriods,
+            totalTimestamp=totalDuration,
+            totalSinceMonday=totalSinceMonday)
 
 @app.route('/toggle', methods=['POST'])
 def toggleWorking():

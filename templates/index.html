@@ -32,9 +32,15 @@
       <button hx-delete="/dropDb" hx-swap="none">Drop DB</button>
       {% include "status.html" %}
     </div>
-    <div id="dayTotal">
-      <h2>Total Jour</h2>
-      {% include "dayTotal.html" %}
+    <div class="flex-row gap-2">
+      <div id="dayTotal">
+        <h2>Total Jour</h2>
+        {% include "dayTotal.html" %}
+      </div>
+      <div id="weekTotal">
+        <h2>Total Semaine</h2>
+        {% include "weekTotal.html" %}
+      </div>
     </div>
 
     <div>
