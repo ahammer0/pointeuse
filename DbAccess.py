@@ -78,7 +78,7 @@ class DbAccess():
     def getAllPeriodes(self):
         with self.lock:
             cur = self.con.cursor()
-            cur.execute("""SELECT * FROM periode WHERE timestamp_out IS NOT NULL;""")
+            cur.execute("""SELECT * FROM periode WHERE timestamp_out IS NOT NULL ORDER BY timestamp_in DESC LIMIT 10;""")
             items = cur.fetchall()
             return [Periode.Periode(item) for item in items]
 
