@@ -67,14 +67,13 @@ def getDayTotal():
 @app.route("/stream")
 def events():
     db = app.config['db']
+    
     def SSE():
+        yield "event: init\ndata: init\n\n"
         while True:
-            status = db.getChangedFlag()
-            if status:
-                db.resetChangedFlag()
-                
-                print("\nsse newdata sent")
-                yield "event: newdata\ndata: newdatadata\n\n"
+            status = db.waitChangedFlag()
+            yield f"event: newdata\ndata: newdatadata {status}\n\n"
+            print("\nsse newdata sent")
     return Response(SSE(), mimetype="text/event-stream")
 
 @app.route("/dropDb",methods=['DELETE'])

@@ -13,7 +13,7 @@ class DbAccess():
         self.currentPeriode = self._getOpenedPeriode()
         self.isActivePeriode = self.currentPeriode is not None
 
-        self.changedFlag = False
+        self.changedFlag = threading.Event()
 
     def _createDb(self):
         with self.lock:
@@ -28,7 +28,7 @@ class DbAccess():
         with self.lock:
             cur = self.con.cursor()
             cur.execute("""DROP TABLE IF EXISTS periode;""")
-            self.changedFlag = True
+            self.changedFlag.set()
             self.currantPeriode = None
             self.isActivePeriode = False
 
@@ -44,7 +44,7 @@ class DbAccess():
                 cur.execute("SELECT * FROM periode WHERE id=?;",(cur.lastrowid,))
                 self.currentPeriode = Periode.Periode(cur.fetchone())
                 self.isActivePeriode = True
-                self.changedFlag = True
+                self.changedFlag.set()
 
     def _getOpenedPeriode(self):
         with self.lock:
@@ -67,7 +67,7 @@ class DbAccess():
 
             self.currentPeriode = None
             self.isActivePeriode = False
-            self.changedFlag = True
+            self.changedFlag.set()
 
     def toggleWorking(self):
         if self.isActivePeriode:
@@ -87,7 +87,7 @@ class DbAccess():
             cur = self.con.cursor()
             cur.execute("""DELETE FROM periode where id=?;""",(id,))
             self.con.commit()
-            self.changedFlag = True
+            self.changedFlag.set()
 
     def getTotalDurationSince(self,timestamp):
         with self.lock:
@@ -100,10 +100,12 @@ class DbAccess():
 
     def resetChangedFlag(self):
         with self.lock:
-            self.changedFlag = False
-    def getChangedFlag(self):
-        with self.lock:
-            return self.changedFlag
+            self.changedFlag.clear()
+
+    def waitChangedFlag(self):
+        self.changedFlag.wait()
+        self.changedFlag.clear()
+        return self.isActivePeriode
 
 
 if __name__=="__main__":
