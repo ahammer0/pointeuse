@@ -12,6 +12,7 @@
       src="https://unpkg.com/htmx.org@2.0.4"
       integrity="sha384-HGfztofotfshcF7+8n44JQL2oJmowVChPTg48S+jvZoztPfvwD79OC/LTtG6dMp+"
       crossorigin="anonymous"
+      defer
     ></script>
     <script src="https://unpkg.com/htmx-ext-sse@2.2.2/sse.js"></script>
     <script type="text/javascript" src="/static/js/main.js"></script>
@@ -22,14 +23,7 @@
 
     <div id="pointeuse" hx-ext="sse" sse-connect="/stream">
       <p>Pointeuse</p>
-      <button
-        id="toggle"
-        hx-post="/toggle"
-        hx-target="#state"
-      >
-        Toggle
-      </button>
-      <button hx-delete="/dropDb" hx-swap="none">Drop DB</button>
+      <button id="toggle" hx-post="/toggle" hx-target="#state">Toggle</button>
       {% include "status.html" %}
     </div>
     <div class="flex-row gap-2">
@@ -41,12 +35,15 @@
         <h2>Total Semaine</h2>
         {% include "weekTotal.html" %}
       </div>
+      <div id="monthTotal">
+        <h2>Total Mois</h2>
+        {% include "monthTotal.html" %}
+      </div>
     </div>
 
     <div>
       <h2>Periodes</h2>
       {% include "periodes.html" %}
     </div>
-
   </body>
 </html>

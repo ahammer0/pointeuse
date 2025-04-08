@@ -1,8 +1,19 @@
 {% block periodes %}
 <ul id="periodes"
     hx-swap-oob="true">
-  {% for periode in periodes %}
-  <li>{{periode.getStartTimeStr()}} - {{periode.getDuration()}}</li>
+
+  {% for pds in periodesbd %} 
+  <hr/>
+  <p>{{datetime.fromtimestamp(pds[0].timestamp_in).strftime('%A') }}</p>
+    {% for periode in pds %}
+    <li>id:{{periode.id}} - {{periode.getStartTimeStr()}} - {{periode.getEndTimeStr()}} : {{periode.getDuration()}}</li>
+    {% endfor %}
   {% endfor %}
+
+  <!--<p>AllPeriodes</p>-->
+  <!--{% for periode in periodes %}-->
+  <!--<li>id:{{periode.id}} - {{periode.getStartTimeStr()}} - {{periode.getEndTimeStr()}} : {{periode.getDuration()}}</li>-->
+  <!--{% endfor %}-->
+
 </ul>
 {% endblock %}
