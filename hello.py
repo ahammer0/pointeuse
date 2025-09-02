@@ -3,8 +3,8 @@ import threading
 
 # modules internes
 import webserver
-import lib.kbdhandle
-import lib.DbAccess as DbAccess
+import lib.kbdHandle.kbdhandle as kbdhandle
+import lib.DbAccess.DbAccess as DbAccess
 
 
 if __name__ == "__main__":
