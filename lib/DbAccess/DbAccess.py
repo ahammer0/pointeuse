@@ -3,7 +3,7 @@ import sqlite3
 import time
 import datetime
 
-import Periode
+import lib.Periode.Periode as Periode
 
 
 class DbAccess:
@@ -129,6 +129,9 @@ class DbAccess:
         return self.isActivePeriode
 
 
+#
+# for testing purposes
+#
 if __name__ == "__main__":
     print("test DbAccess")
     db = DbAccess()

@@ -1,30 +1,4 @@
-import datetime
 import time
-
-
-class Periode:
-    def __init__(self, period):
-        self.id: int = period[0]
-        self.timestamp_in: int = period[1]
-        self.timestamp_out: int = period[2]
-
-    def __str__(self):
-        return f"Periode({self.id}, {self.timestamp_in}, {self.timestamp_out})"
-
-    def getStartTimeStr(self):
-        return datetime.datetime.fromtimestamp(self.timestamp_in).strftime(
-            "%Y-%m-%d %H:%M:%S"
-        )
-
-    def getEndTimeStr(self):
-        if self.timestamp_out is None:
-            return "En cours"
-        return datetime.datetime.fromtimestamp(self.timestamp_out).strftime(
-            "%Y-%m-%d %H:%M:%S"
-        )
-
-    def getDuration(self):
-        return Duration.fromPeriod(self)
 
 
 class Duration:
@@ -57,10 +31,3 @@ class Duration:
 
     def __radd__(self, other):
         return self.__add__(other)
-
-
-if __name__ == "__main__":
-    p = Periode((1, 1735294708, 1735294708 + 120))
-    print(p)
-    repr(p)
-    print("doit donner 2 minutes")

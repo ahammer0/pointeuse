@@ -3,19 +3,30 @@
     hx-swap-oob="true">
 
   {% for pds in periodesbd %} 
-  <hr/>
-  {% if pds|length >0 %}
-    <p>{{datetime.fromtimestamp(pds[0].timestamp_in).strftime('%A') }}</p>
-  {% endif %}
+    <hr/>
+
+    {% if pds|length >0 %}
+      <p>{{datetime.fromtimestamp(pds[0].timestamp_in).strftime('%A') }}</p>
+    {% endif %}
+
     {% for periode in pds %}
-    <li>id:{{periode.id}} - {{periode.getStartTimeStr()}} - {{periode.getEndTimeStr()}} : {{periode.getDuration()}}</li>
+      <li id="periode_{{periode.id}}">
+        <button 
+          id="delete"
+          hx-delete="/periode?id={{periode.id}}"
+          hx-target="#periode_{{periode.id}}"
+          hx-swap="outerHTML"
+        >Del</button>
+        id:{{periode.id}} - {{periode.getStartTimeStr()}} - {{periode.getEndTimeStr()}} : {{periode.getDuration()}}
+      </li>
     {% endfor %}
   {% endfor %}
 
-  <!--<p>AllPeriodes</p>-->
-  <!--{% for periode in periodes %}-->
-  <!--<li>id:{{periode.id}} - {{periode.getStartTimeStr()}} - {{periode.getEndTimeStr()}} : {{periode.getDuration()}}</li>-->
-  <!--{% endfor %}-->
+
+  <p>AllPeriodes</p>
+  {% for periode in periodes %}
+  <li>id:{{periode.id}} - {{periode.getStartTimeStr()}} - {{periode.getEndTimeStr()}} : {{periode.getDuration()}}</li>
+  {% endfor %}
 
 </ul>
 {% endblock %}

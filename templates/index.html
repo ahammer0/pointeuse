@@ -21,11 +21,14 @@
   <body>
     <h1>Pointeuse</h1>
 
+    <!-- Section de contrôle / state  -->
     <div id="pointeuse" hx-ext="sse" sse-connect="/stream">
       <p>Pointeuse</p>
       <button id="toggle" hx-post="/toggle" hx-target="#state">Toggle</button>
       {% include "status.html" %}
     </div>
+
+    <!-- Section des stats  -->
     <div class="flex-row gap-2">
       <div id="dayTotal">
         <h2>Total Jour</h2>
@@ -41,6 +44,7 @@
       </div>
     </div>
 
+    <!-- Section des periodes -->
     <div>
       <h2>Periodes</h2>
       {% include "periodes.html" %}
