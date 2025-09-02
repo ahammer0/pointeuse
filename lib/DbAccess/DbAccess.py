@@ -94,12 +94,31 @@ class DbAccess:
             items = cur.fetchall()
             return [Periode.Periode(item) for item in items]
 
+    def getPeriodeById(self, id: int):
+        with self.lock:
+            cur = self.con.cursor()
+            cur.execute("SELECT * FROM periode WHERE id=?;", (id,))
+            item = cur.fetchone()
+            return Periode.Periode(item)
+
     def deletePeriode(self, id):
         with self.lock:
             cur = self.con.cursor()
             cur.execute("""DELETE FROM periode where id=?;""", (id,))
             self.con.commit()
-            self.changedFlag.set()
+
+    def editPeriode(self, per: Periode.Periode):
+        with self.lock:
+            cur = self.con.cursor()
+            cur.execute(
+                """UPDATE periode SET timestamp_in = ?, timestamp_out = ? where id=?;""",
+                (
+                    per.timestamp_in,
+                    per.timestamp_out,
+                    per.id,
+                ),
+            )
+            self.con.commit()
 
     def getTotalDurationSince(self, timestamp):
         with self.lock:

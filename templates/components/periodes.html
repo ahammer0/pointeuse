@@ -17,6 +17,7 @@
           hx-target="#periode_{{periode.id}}"
           hx-swap="outerHTML"
         >Del</button>
+        <a href="/editperiode?id={{periode.id}}">Edit</a>
         id:{{periode.id}} - {{periode.getStartTimeStr()}} - {{periode.getEndTimeStr()}} : {{periode.getDuration()}}
       </li>
     {% endfor %}

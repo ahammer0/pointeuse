@@ -1,0 +1,9 @@
+{% extends "pages/index.html" %} {% block content %}
+<p>edit_period_page</p>
+<form method="POST" hx-post="/editperiode">
+  <input type="hidden" name="id" value="{{period.id}}" />
+  <input type="datetime-local" name="ts_in" value="{{period.getStartTimeStr()}}" />
+  <input type="datetime-local" name="ts_out" value="{{period.getEndTimeStr()}}" />
+  <input type="submit" />
+</form>
+{% endblock %}

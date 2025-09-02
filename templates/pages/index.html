@@ -21,33 +21,35 @@
   <body>
     <h1>Pointeuse</h1>
 
+    {% block content %}
     <!-- Section de contrôle / state  -->
     <div id="pointeuse" hx-ext="sse" sse-connect="/stream">
       <p>Pointeuse</p>
       <button id="toggle" hx-post="/toggle" hx-target="#state">Toggle</button>
-      {% include "status.html" %}
+      {% include "components/status.html" %}
     </div>
 
     <!-- Section des stats  -->
     <div class="flex-row gap-2">
       <div id="dayTotal">
         <h2>Total Jour</h2>
-        {% include "dayTotal.html" %}
+        {% include "components/dayTotal.html" %}
       </div>
       <div id="weekTotal">
         <h2>Total Semaine</h2>
-        {% include "weekTotal.html" %}
+        {% include "components/weekTotal.html" %}
       </div>
       <div id="monthTotal">
         <h2>Total Mois</h2>
-        {% include "monthTotal.html" %}
+        {% include "components/monthTotal.html" %}
       </div>
     </div>
 
     <!-- Section des periodes -->
     <div>
       <h2>Periodes</h2>
-      {% include "periodes.html" %}
+      {% include "components/periodes.html" %}
     </div>
+    {% endblock content %}
   </body>
 </html>
