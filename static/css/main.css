@@ -1,21 +1,43 @@
-ul#periodes{
+ul#periodes {
   list-style-type: none;
   padding: 0;
   margin: 0;
 }
 
-ul#periodes li{
+ul#periodes li {
   display: list-item;
 }
 
-button{
+button {
   margin: 5px;
   padding: 5px;
 }
-.flex-row{
+.flex-row {
   display: flex;
   flex-direction: row;
 }
-.gap-2{
+.gap-2 {
   gap: 2rem;
-} 
+}
+
+.period_bar .bars {
+  position: relative;
+  background-color: #f1f1f1;
+  height: 8px;
+  width: 100%;
+}
+.period_bar .el {
+  position: absolute;
+  background-color: red;
+  min-width: 1px;
+  height: 8px;
+}
+
+.period_bar .labels {
+  position: relative;
+  width: 100%;
+  height: 13px;
+}
+.period_bar .label {
+  position: absolute;
+}

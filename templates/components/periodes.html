@@ -16,11 +16,28 @@
           hx-delete="/periode?id={{periode.id}}"
           hx-target="#periode_{{periode.id}}"
           hx-swap="outerHTML"
+          hx-confirm="Voulez-vous vraiment supprimer cette periode ?"
         >Del</button>
         <a href="/editperiode?id={{periode.id}}">Edit</a>
         id:{{periode.id}} - {{periode.getStartTimeStr()}} - {{periode.getEndTimeStr()}} : {{periode.getDuration()}}
       </li>
     {% endfor %}
+        <div class="period_bar" >
+          <div class="bars">
+            {% for per in pds %}
+            <div class="el" style="
+              width:{{(per.timestamp_out-per.timestamp_in)*100/(24*60*60)}}%;
+              left:{{per.timestamp_in%(24*60*60)/(24*60*60)*100}}%;
+              ">
+            </div>
+            {% endfor %}
+          </div>
+          <div class="labels">
+            <div class="label" style=" left:0%; ">0h</div>
+            <div class="label" style=" left:50%; ">12h</div>
+            <div class="label" style=" right:0%; ">24h</div>
+          </div>
+        </div>
   {% endfor %}
 
 
