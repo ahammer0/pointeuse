@@ -39,16 +39,12 @@ button {
   position: absolute;
   bottom: 0;
   transform: translateY(100%);
-  display: none;
   background-color: lightgrey;
   z-index: 99;
 }
 .period_bar .el .menu .data {
   position: relative;
   width: max-content;
-}
-.period_bar .el:hover .menu {
-  display: unset;
 }
 
 .period_bar .labels {

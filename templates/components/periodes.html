@@ -12,13 +12,33 @@
     {% for periode in pds %}
     {% endfor %}
         <div class="period_bar" >
-          <div class="bars">
+          <div class="bars" x-ref="bars">
             {% for per in pds %}
-            <div class="el" style="
+            <div 
+              class="el" 
+              style="
               width:{{(per.getTodaySeconds(per.timestamp_out)-per.getTodaySeconds(per.timestamp_in))*100/(24*60*60)}}%;
               left:{{per.getTodaySeconds(per.timestamp_in)/(24*60*60)*100}}%;
-              ">
-              <div class="menu">
+              "
+              x-data="{
+                open: false,
+                menuRight: $refs.menu.getBoundingClientRect().right
+              }"
+              @mouseenter="open=true"
+              x-effect="
+                if(menuRight>window.innerWidth){
+                    $refs.menu.style.right = '0'
+                }
+              "
+              @mouseleave="open=false"
+
+            >
+              <div 
+                class="menu" 
+                x-show="open"
+                x-ref="menu"
+              >
+                
                 <div class="buttons">
                   <button 
                     id="delete"
