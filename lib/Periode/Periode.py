@@ -14,6 +14,9 @@ class Periode:
     def __str__(self):
         return f"Periode({self.id}, {self.timestamp_in}, {self.timestamp_out})"
 
+    def __repr__(self):
+        return f"Periode({self.id}, {self.getStartTimeStr()}, {self.getEndTimeStr()})"
+
     def getStartTimeStr(self):
         return datetime.datetime.fromtimestamp(self.timestamp_in).strftime(
             "%Y-%m-%d %H:%M:%S"
@@ -39,35 +42,41 @@ class Periode:
         If a given period is ranging  from 11pm to 1 am, it will be split into 2 periods,
         one from 11pm to 12am and one from 12am to 1am
         """
-        # sort periodes by day
-        todayTs = Periode.getMidnightTimestamp()
-        periodes_by_day: list[list[Periode]] = []
 
-        retenue: Periode | None = None
-        dayArr: list[Periode] = []
-        for per in periodes:
-            offset = len(periodes_by_day)
-            mints = todayTs - offset * 24 * 60 * 60
-            maxts = todayTs - (offset + 1) * 24 * 60 * 60
+        def splitPeriod(period: Periode) -> List[Periode]:
+            mnIn = cls.getMidnightTimestamp(period.timestamp_in)
+            mnOut = cls.getMidnightTimestamp(period.timestamp_out)
 
-            if retenue is not None:
-                dayArr.append(retenue)
-                retenue = None
-
-            if per.timestamp_out < mints:
-                retenue = per
-                periodes_by_day.append(dayArr)
-                dayArr = []
-                continue
-
-            if per.timestamp_in < mints:
-                retenue = Periode((per.id, per.timestamp_in, mints))
-                toadd = Periode((per.id, mints, per.timestamp_out))
-                dayArr.append(toadd)
-                periodes_by_day.append(dayArr)
-                dayArr = []
+            if mnIn == mnOut:
+                return [period]
+            if mnOut > mnIn:
+                return splitPeriod(
+                    Periode((period.id, period.timestamp_in, mnOut - 1))
+                ) + splitPeriod(Periode((period.id, mnOut, period.timestamp_out)))
             else:
-                dayArr.append(per)
+                raise Exception("Period timestamp reverse !")
+
+        splitPeriodes: List[Periode] = []
+        for per in periodes:
+            splitPeriodes += splitPeriod(per)
+        splitPeriodes.sort(key=lambda per: per.timestamp_in, reverse=True)
+
+        # sort periodes by day
+        periodes_by_day: list[list[Periode]] = []
+        dayPeriodes: List[Periode] = []
+
+        curDayts = cls.getMidnightTimestamp(splitPeriodes[0].timestamp_in)
+        for per in splitPeriodes:
+            perDayTs = cls.getMidnightTimestamp(per.timestamp_in)
+            if perDayTs == curDayts:
+                dayPeriodes.append(per)
+            else:
+                periodes_by_day.append(dayPeriodes)
+                dayPeriodes = []
+                dayPeriodes.append(per)
+                curDayts = cls.getMidnightTimestamp(per.timestamp_in)
+        periodes_by_day.append(dayPeriodes)
+
         return periodes_by_day
 
     @staticmethod
@@ -79,10 +88,19 @@ class Periode:
         return int(date.timestamp())
 
     @staticmethod
-    def getMidnightTimestamp():
-        date = datetime.datetime.now()
+    def getMidnightTimestamp(ts=None):
+        if ts is None:
+            date = datetime.datetime.now()
+        else:
+            date = datetime.datetime.fromtimestamp(ts)
+
         date = date.replace(hour=0, minute=0, second=0)
         return int(date.timestamp())
+
+    @classmethod
+    def getTodaySeconds(cls, ts: int):
+        todayMidnight = cls.getMidnightTimestamp(ts)
+        return ts - todayMidnight
 
     @staticmethod
     def getFirstOfMonthTimestamp():
