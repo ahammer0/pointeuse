@@ -38,6 +38,11 @@ button {
   background-color: red;
   min-width: 10px;
   height: var(--height);
+  border: solid 1px black;
+  border-radius: 5px;
+}
+.period_bar .el.current {
+  background-color: blue;
 }
 .period_bar .el .menu {
   background-color: lightgrey;

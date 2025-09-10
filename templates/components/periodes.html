@@ -13,6 +13,24 @@
     {% endfor %}
         <div class="period_bar" >
           <div class="bars">
+
+            {% set curSecIn=currentPeriode.getTodaySeconds(currentPeriode.timestamp_in) %}
+            {% if currentPeriode.getMidnightTimestamp(currentPeriode.timestamp_in)== pds[0].getMidnightTimestamp(pds[0].timestamp_in)%}
+              <div 
+                id="periode_{{currentPeriode.timestamp_in}}"
+                class="el current" 
+                style="
+                left:{{currentPeriode.getTodaySeconds(currentPeriode.timestamp_in)/(24*60*60)*100}}%;
+                "
+                x-data="{
+                  tsout:new Date()/1000,
+                  tsin:{{currentPeriode.timestamp_in}}
+                }"
+                x-init="setInterval(()=>{ tsout++},1000)"
+                :style="{width:((tsout-tsin)*100/(24*60*60)).toString()+'%'}"
+              >
+              </div>
+            {%endif%}
             {% for per in pds %}
             <div 
               id="periode_{{per.timestamp_in}}"
@@ -32,6 +50,7 @@
               <div 
                 class="menu" 
                 x-show="open"
+                x-transition.duration.50ms
                 x-cloak
                 x-anchor.bottom="$refs.periodeEl"
               >

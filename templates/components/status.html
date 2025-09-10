@@ -11,9 +11,8 @@
   <p>
     Duree:
     <span
-      data-timestamp="{{currentPeriode.timestamp_in}}"
       x-data="{
-      timestamp: new Date()/1000 - $el.dataset.timestamp
+              timestamp: new Date()/1000 - {{currentPeriode.timestamp_in}}
     }"
       x-text="formatTimestamp(timestamp)"
       x-init="setInterval(() => { timestamp++; }, 1000)"

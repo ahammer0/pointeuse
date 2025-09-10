@@ -25,7 +25,7 @@ app.config["db"] = db
 def hello_world():
     db: DB = app.config["db"]
     state = db.isActivePeriode
-    allPeriods = db.getAllPeriodes(10)
+    allPeriods = db.getAllPeriodes(30)
     currentPeriode = db.currentPeriode
 
     periodesbd = Periode.Periode.splitPeriodesAtMidnight(allPeriods)
