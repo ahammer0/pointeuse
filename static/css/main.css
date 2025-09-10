@@ -40,15 +40,12 @@ button {
   height: var(--height);
 }
 .period_bar .el .menu {
-  position: absolute;
-  bottom: 0;
-  transform: translateY(100%);
   background-color: lightgrey;
   z-index: 99;
+  width: max-content;
 }
 .period_bar .el .menu .data {
   position: relative;
-  width: max-content;
 }
 
 .period_bar .labels {

@@ -23,34 +23,17 @@
               "
               x-data="{
                 open: false,
-                resizeMenu() {
-                  this.$nextTick(()=>{
-                    requestAnimationFrame(()=>{
-                      if(!this.$refs.menu) return;
-                      let menuRight= this.$refs.menu.getBoundingClientRect().right
-                      console.log(menuRight)
-                      if(menuRight>window.innerWidth){
-                        this.$refs.menu.style.right = '0'
-                        this.$refs.menu.style.left = 'auto'
-                      }
-                      else{
-                        this.$refs.menu.style.left = '0'
-                        this.$refs.menu.style.right = 'auto'
-                      }
-                    })
-                  })
-                },
               }"
               @mouseenter="open=true"
               @mouseleave="open=false"
-              x-effect=" if(open)resizeMenu() "
+              x-ref="periodeEl"
 
             >
               <div 
                 class="menu" 
                 x-show="open"
-                x-ref="menu"
                 x-cloak
+                x-anchor.bottom="$refs.periodeEl"
               >
                 
                 <div class="buttons">
