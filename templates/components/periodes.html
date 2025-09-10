@@ -12,9 +12,10 @@
     {% for periode in pds %}
     {% endfor %}
         <div class="period_bar" >
-          <div class="bars" x-ref="bars">
+          <div class="bars">
             {% for per in pds %}
             <div 
+              id="periode_{{per.id}}"
               class="el" 
               style="
               width:{{(per.getTodaySeconds(per.timestamp_out)-per.getTodaySeconds(per.timestamp_in))*100/(24*60*60)}}%;
@@ -26,8 +27,10 @@
               }"
               @mouseenter="open=true"
               x-effect="
-                if(menuRight>window.innerWidth){
-                    $refs.menu.style.right = '0'
+                if(open){
+                  if(menuRight>window.innerWidth){
+                      $refs.menu.style.right = '0'
+                  }
                 }
               "
               @mouseleave="open=false"
