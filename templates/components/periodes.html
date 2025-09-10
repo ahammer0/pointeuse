@@ -15,7 +15,7 @@
           <div class="bars">
             {% for per in pds %}
             <div 
-              id="periode_{{per.id}}"
+              id="periode_{{per.timestamp_in}}"
               class="el" 
               style="
               width:{{(per.getTodaySeconds(per.timestamp_out)-per.getTodaySeconds(per.timestamp_in))*100/(24*60*60)}}%;
@@ -30,6 +30,7 @@
                 if(open){
                   if(menuRight>window.innerWidth){
                       $refs.menu.style.right = '0'
+                      $refs.menu.style.left = 'auto'
                   }
                 }
               "
@@ -40,13 +41,14 @@
                 class="menu" 
                 x-show="open"
                 x-ref="menu"
+                x-cloak
               >
                 
                 <div class="buttons">
                   <button 
                     id="delete"
                     hx-delete="/periode?id={{per.id}}"
-                    hx-target="#periode_{{per.id}}"
+                    hx-target="#periode_{{per.timestamp_in}}"
                     hx-swap="outerHTML"
                     hx-confirm="Voulez-vous vraiment supprimer cette periode ?"
                   >Del</button>
