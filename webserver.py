@@ -4,10 +4,13 @@ from flask import Response
 from flask import request
 from lib.DbAccess.DbAccess import DbAccess as DB
 from datetime import datetime
+import locale
 
 
 from lib.Periode.Duration import Duration
 import lib.Periode.Periode as Periode
+
+locale.setlocale(locale.LC_TIME, "fr_FR.UTF-8")
 
 db = DB()
 

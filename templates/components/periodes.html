@@ -6,7 +6,7 @@
     <hr/>
 
     {% if pds|length >0 %}
-      <p>{{datetime.fromtimestamp(pds[0].timestamp_in).strftime('%A') }}</p>
+      <p>{{datetime.fromtimestamp(pds[0].timestamp_in).strftime('%A %d') }}</p>
     {% endif %}
 
     {% for periode in pds %}
@@ -34,7 +34,9 @@
           </div>
           <div class="labels">
             <div class="label" style=" left:0%; ">0h</div>
+            <div class="label" style=" left:33.33%; ">8h</div>
             <div class="label" style=" left:50%; ">12h</div>
+            <div class="label" style=" left:75%; ">18h</div>
             <div class="label" style=" right:0%; ">24h</div>
           </div>
         </div>
