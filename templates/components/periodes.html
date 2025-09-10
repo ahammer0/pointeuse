@@ -23,18 +23,27 @@
               "
               x-data="{
                 open: false,
-                menuRight: $refs.menu.getBoundingClientRect().right
+                resizeMenu() {
+                  this.$nextTick(()=>{
+                    requestAnimationFrame(()=>{
+                      if(!this.$refs.menu) return;
+                      let menuRight= this.$refs.menu.getBoundingClientRect().right
+                      console.log(menuRight)
+                      if(menuRight>window.innerWidth){
+                        this.$refs.menu.style.right = '0'
+                        this.$refs.menu.style.left = 'auto'
+                      }
+                      else{
+                        this.$refs.menu.style.left = '0'
+                        this.$refs.menu.style.right = 'auto'
+                      }
+                    })
+                  })
+                },
               }"
               @mouseenter="open=true"
-              x-effect="
-                if(open){
-                  if(menuRight>window.innerWidth){
-                      $refs.menu.style.right = '0'
-                      $refs.menu.style.left = 'auto'
-                  }
-                }
-              "
               @mouseleave="open=false"
+              x-effect=" if(open)resizeMenu() "
 
             >
               <div 
