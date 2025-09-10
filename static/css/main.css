@@ -20,17 +20,35 @@ button {
   gap: 2rem;
 }
 
+.period_bar {
+  --height: 24px;
+}
 .period_bar .bars {
   position: relative;
   background-color: #f1f1f1;
-  height: 8px;
+  height: var(--height);
   width: 100%;
 }
 .period_bar .el {
   position: absolute;
   background-color: red;
-  min-width: 1px;
-  height: 8px;
+  min-width: 10px;
+  height: var(--height);
+}
+.period_bar .el .menu {
+  position: absolute;
+  bottom: 0;
+  transform: translateY(100%);
+  display: none;
+  background-color: lightgrey;
+  z-index: 99;
+}
+.period_bar .el .menu .data {
+  position: relative;
+  width: max-content;
+}
+.period_bar .el:hover .menu {
+  display: unset;
 }
 
 .period_bar .labels {

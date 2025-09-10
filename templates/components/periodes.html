@@ -1,5 +1,5 @@
 {% block periodes %}
-<ul id="periodes"
+<div id="periodes"
     hx-swap-oob="true">
 
   {% for pds in periodesbd %} 
@@ -10,17 +10,6 @@
     {% endif %}
 
     {% for periode in pds %}
-      <li id="periode_{{periode.id}}">
-        <button 
-          id="delete"
-          hx-delete="/periode?id={{periode.id}}"
-          hx-target="#periode_{{periode.id}}"
-          hx-swap="outerHTML"
-          hx-confirm="Voulez-vous vraiment supprimer cette periode ?"
-        >Del</button>
-        <a href="/editperiode?id={{periode.id}}">Edit</a>
-        id:{{periode.id}} - {{periode.getStartTimeStr()}} - {{periode.getEndTimeStr()}} : {{periode.getDuration()}}
-      </li>
     {% endfor %}
         <div class="period_bar" >
           <div class="bars">
@@ -29,6 +18,22 @@
               width:{{(per.getTodaySeconds(per.timestamp_out)-per.getTodaySeconds(per.timestamp_in))*100/(24*60*60)}}%;
               left:{{per.getTodaySeconds(per.timestamp_in)/(24*60*60)*100}}%;
               ">
+              <div class="menu">
+                <div class="buttons">
+                  <button 
+                    id="delete"
+                    hx-delete="/periode?id={{per.id}}"
+                    hx-target="#periode_{{per.id}}"
+                    hx-swap="outerHTML"
+                    hx-confirm="Voulez-vous vraiment supprimer cette periode ?"
+                  >Del</button>
+                  <a href="/editperiode?id={{per.id}}">Edit</a>
+                </div>
+              <div class="data" >
+                  id:{{per.id}} - {{per.getStartTimeStr()}} - {{per.getEndTimeStr()}} : {{per.getDuration()}}
+                </div>
+
+              </div>
             </div>
             {% endfor %}
           </div>
@@ -43,10 +48,6 @@
   {% endfor %}
 
 
-  <p>AllPeriodes</p>
-  {% for periode in periodes %}
-  <li>id:{{periode.id}} - {{periode.getStartTimeStr()}} - {{periode.getEndTimeStr()}} : {{periode.getDuration()}}</li>
-  {% endfor %}
 
-</ul>
+</div>
 {% endblock %}
