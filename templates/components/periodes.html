@@ -52,7 +52,7 @@
     <div class="period_bar" >
       <div class="bars">
 
-        {% if condition and currentPeriode %}
+        {% if currentPeriode.getMidnightTimestamp(currentPeriode.timestamp_in)== pds[0].getMidnightTimestamp(pds[0].timestamp_in) and currentPeriode %}
           <div 
             id="periode_{{currentPeriode.timestamp_in}}"
             class="el current" 
