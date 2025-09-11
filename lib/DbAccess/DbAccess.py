@@ -31,7 +31,7 @@ class DbAccess:
             cur = self.con.cursor()
             cur.execute("""DROP TABLE IF EXISTS periode;""")
             self.changedFlag.set()
-            self.currantPeriode = None
+            self.currentPeriode = None
             self.isActivePeriode = False
 
     def newPeriode(self):
