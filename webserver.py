@@ -105,6 +105,7 @@ def getStatus():
         )
         + render_template(
             "components/periodes.html",
+            currentPeriode=currentPeriode,
             periodesbd=periodesbd,
             periodes=allPeriods,
             datetime=datetime,

@@ -2,85 +2,123 @@
 <div id="periodes"
     hx-swap-oob="true">
 
+  {%if currentPeriode %}
+  {% set curSecIn=currentPeriode.getTodaySeconds(currentPeriode.timestamp_in) %}
+  {% set condition=currentPeriode.getMidnightTimestamp(currentPeriode.timestamp_in)== periodesbd[0][0].getMidnightTimestamp(periodesbd[0][0].timestamp_in)%}
+  {% endif %}
+
+  {%if not condition and currentPeriode %}
+    <hr/>
+
+      <p>{{datetime.fromtimestamp(currentPeriode.timestamp_in).strftime('%A %d') }}</p>
+
+    <div class="period_bar" >
+      <div class="bars">
+
+          <div 
+            id="periode_{{currentPeriode.timestamp_in}}"
+            class="el current" 
+            style="
+            left:{{currentPeriode.getTodaySeconds(currentPeriode.timestamp_in)/(24*60*60)*100}}%;
+            "
+            x-data="{
+              tsout:new Date()/1000,
+              tsin:{{currentPeriode.timestamp_in}}
+            }"
+            x-init="setInterval(()=>{ tsout++},1000)"
+            :style="{width:((tsout-tsin)*100/(24*60*60)).toString()+'%'}"
+          >
+          </div>
+      </div>
+      <div class="labels">
+        <div class="label" style=" left:0%; ">0h</div>
+        <div class="label" style=" left:33.33%; ">8h</div>
+        <div class="label" style=" left:50%; ">12h</div>
+        <div class="label" style=" left:75%; ">18h</div>
+        <div class="label" style=" right:0%; ">24h</div>
+      </div>
+    </div>
+
+  {%endif%}
+
   {% for pds in periodesbd %} 
+
     <hr/>
 
     {% if pds|length >0 %}
       <p>{{datetime.fromtimestamp(pds[0].timestamp_in).strftime('%A %d') }}</p>
     {% endif %}
 
-    {% for periode in pds %}
-    {% endfor %}
-        <div class="period_bar" >
-          <div class="bars">
+    <div class="period_bar" >
+      <div class="bars">
 
-            {% set curSecIn=currentPeriode.getTodaySeconds(currentPeriode.timestamp_in) %}
-            {% if currentPeriode.getMidnightTimestamp(currentPeriode.timestamp_in)== pds[0].getMidnightTimestamp(pds[0].timestamp_in)%}
-              <div 
-                id="periode_{{currentPeriode.timestamp_in}}"
-                class="el current" 
-                style="
-                left:{{currentPeriode.getTodaySeconds(currentPeriode.timestamp_in)/(24*60*60)*100}}%;
-                "
-                x-data="{
-                  tsout:new Date()/1000,
-                  tsin:{{currentPeriode.timestamp_in}}
-                }"
-                x-init="setInterval(()=>{ tsout++},1000)"
-                :style="{width:((tsout-tsin)*100/(24*60*60)).toString()+'%'}"
-              >
-              </div>
-            {%endif%}
-            {% for per in pds %}
-            <div 
-              id="periode_{{per.timestamp_in}}"
-              class="el" 
-              style="
-              width:{{(per.getTodaySeconds(per.timestamp_out)-per.getTodaySeconds(per.timestamp_in))*100/(24*60*60)}}%;
-              left:{{per.getTodaySeconds(per.timestamp_in)/(24*60*60)*100}}%;
-              "
-              x-data="{
-                open: false,
-              }"
-              @mouseenter="open=true"
-              @mouseleave="open=false"
-              x-ref="periodeEl"
-
-            >
-              <div 
-                class="menu" 
-                x-show="open"
-                x-transition.duration.50ms
-                x-cloak
-                x-anchor.bottom="$refs.periodeEl"
-              >
-                
-                <div class="buttons">
-                  <button 
-                    id="delete"
-                    hx-delete="/periode?id={{per.id}}"
-                    hx-target="#periode_{{per.timestamp_in}}"
-                    hx-swap="outerHTML"
-                    hx-confirm="Voulez-vous vraiment supprimer cette periode ?"
-                  >Del</button>
-                  <a href="/editperiode?id={{per.id}}">Edit</a>
-                </div>
-              <div class="data" >
-                  id:{{per.id}} - {{per.getStartTimeStr()}} - {{per.getEndTimeStr()}} : {{per.getDuration()}}
-                </div>
-
-              </div>
-            </div>
-            {% endfor %}
+        {% if condition and currentPeriode %}
+          <div 
+            id="periode_{{currentPeriode.timestamp_in}}"
+            class="el current" 
+            style="
+            left:{{currentPeriode.getTodaySeconds(currentPeriode.timestamp_in)/(24*60*60)*100}}%;
+            "
+            x-data="{
+              tsout:new Date()/1000,
+              tsin:{{currentPeriode.timestamp_in}}
+            }"
+            x-init="setInterval(()=>{ tsout++},1000)"
+            :style="{width:((tsout-tsin)*100/(24*60*60)).toString()+'%'}"
+          >
           </div>
-          <div class="labels">
-            <div class="label" style=" left:0%; ">0h</div>
-            <div class="label" style=" left:33.33%; ">8h</div>
-            <div class="label" style=" left:50%; ">12h</div>
-            <div class="label" style=" left:75%; ">18h</div>
-            <div class="label" style=" right:0%; ">24h</div>
+        {%endif%}
+
+        {% for per in pds %}
+        <div 
+          id="periode_{{per.timestamp_in}}"
+          class="el" 
+          style="
+          width:{{(per.getTodaySeconds(per.timestamp_out)-per.getTodaySeconds(per.timestamp_in))*100/(24*60*60)}}%;
+          left:{{per.getTodaySeconds(per.timestamp_in)/(24*60*60)*100}}%;
+          "
+          x-data="{
+            open: false,
+          }"
+          @mouseenter="open=true"
+          @mouseleave="open=false"
+          x-ref="periodeEl"
+
+        >
+          <div 
+            class="menu" 
+            x-show="open"
+            x-transition.duration.50ms
+            x-cloak
+            x-anchor.bottom="$refs.periodeEl"
+          >
+            
+            <div class="buttons">
+              <button 
+                id="delete"
+                hx-delete="/periode?id={{per.id}}"
+                hx-target="#periode_{{per.timestamp_in}}"
+                hx-swap="outerHTML"
+                hx-confirm="Voulez-vous vraiment supprimer cette periode ?"
+              >Del</button>
+              <a href="/editperiode?id={{per.id}}">Edit</a>
+            </div>
+          <div class="data" >
+              id:{{per.id}} - {{per.getStartTimeStr()}} - {{per.getEndTimeStr()}} : {{per.getDuration()}}
+            </div>
+
           </div>
         </div>
+        {% endfor %}
+      </div>
+      <div class="labels">
+        <div class="label" style=" left:0%; ">0h</div>
+        <div class="label" style=" left:33.33%; ">8h</div>
+        <div class="label" style=" left:50%; ">12h</div>
+        <div class="label" style=" left:75%; ">18h</div>
+        <div class="label" style=" right:0%; ">24h</div>
+      </div>
+    </div>
   {% endfor %}
 
 
